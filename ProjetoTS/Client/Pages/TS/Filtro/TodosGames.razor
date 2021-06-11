@@ -1,4 +1,4 @@
-﻿@page "/TS/Filtro/TodosProdutos"
+﻿@page "/TS/Filtro/TodosGames"
 @using System.Net.Http
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
@@ -16,12 +16,12 @@
             }
         </InputSelect>
 
-        @foreach(var item in ProdutoList){
+        @foreach(var item in GameList){
             <h3>@item.Nome</h3>
         }
         </div>
 
-<h3>Lista de Produtos</h3>
+<h3>Lista de Games</h3>
 <EditForm Model="@TagList" OnValidSubmit="OnChangeCat">
     <div class="card m-3">
         <h4 class="card-header">Tags</h4>
@@ -39,7 +39,7 @@
         </div>
     </div>
     <div>
-        @foreach (var item in ProdutoList)
+        @foreach (var item in GameList)
         {
             <div class="form-group col">
                 <label class="form-check-label" for="exampleCheck1">@item.Nome</label>
@@ -53,13 +53,13 @@
 <div class="card m-3">
     <h4 class="card-header">Filtrar</h4>
     <div class="card-body">
-        <EditForm Model="@tagproduto">
+        <EditForm Model="@taggame">
             <DataAnnotationsValidator />
 
             <div class="form-row">
                 <label>Tag</label>
-                <InputSelect ValueExpression="@(() => tagproduto.TagId)"
-                             Value="@tagproduto.TagId"
+                <InputSelect ValueExpression="@(() => taggame.TagId)"
+                             Value="@taggame.TagId"
                              ValueChanged="@((string value) => OnChangeCat(value))">
                     <option value="">Selecione a Categoria</option>
                     @foreach (var item in TagList)
@@ -70,20 +70,20 @@
             </div>
 
             
-                <label>Produtos:</label>
+                <label>Games:</label>
 
-                @foreach (var tag in TagProdutoList)
+                @foreach (var tag in TagGameList)
                 {
 
 
-                    @foreach (var produto in ProdutoList) //roda a lista de tags
+                    @foreach (var game in GameList) //roda a lista de tags
                     {
                         
-                            if (tag.Id == produto.Id)
+                            if (tag.Id == game.Id)
                             {
 
                             <tr>
-                            <td>@produto.Id - @produto.Nome</td>
+                            <td>@game.Id - @game.Nome</td>
                             </tr>
                             }
                             
@@ -102,26 +102,26 @@
 
 
     @code {
-        private TagProdutoDTO tagproduto = new TagProdutoDTO();
+        private TagGameDTO taggame = new TagGameDTO();
         private Tag tag = new Tag();
-        private List<Produto> ProdutoList = new List<Produto>();
-        private List<TagProduto> TagProdutoList = new List<TagProduto>();
+        private List<Game> GameList = new List<Game>();
+        private List<TagGame> TagGameList = new List<TagGame>();
         private List<Tag> TagList = new List<Tag>();
 
         protected override async Task OnInitializedAsync()
         {
-            var produtos = await Http.GetFromJsonAsync<List<Produto>>("/Produto/Listar");
-            foreach (var item in produtos)
+            var games = await Http.GetFromJsonAsync<List<Game>>("/Game/Listar");
+            foreach (var item in games)
             {
-                ProdutoList.Add(item);
+                GameList.Add(item);
 
             }
 
             @*
-            var tgp = await Http.GetFromJsonAsync<List<TagProduto>>("/TagProduto/LTagProduto");//Rota para o controller ir e trazer uma lista das Tags
+            var tgp = await Http.GetFromJsonAsync<List<TagGame>>("/TagGame/LTagGame");//Rota para o controller ir e trazer uma lista das Tags
             foreach (var item in tgp)
             {
-                TagProdutoList.Add(item);
+                TagGameList.Add(item);
             }
                 *@
 
@@ -136,13 +136,13 @@
 
         private async Task OnChangeCat(string value)
         {
-            tagproduto.TagId = value; //Seta o valor da Categoria no pedidoDto
-            var tagprodutos = await Http.GetFromJsonAsync<List<TagProduto>>("/TagProduto/LTagProduto");
-            TagProdutoList.Clear();
-            var produtosByCategory = tagprodutos.Where(c => c.TagId == Convert.ToInt32(value));
-            foreach (var item in produtosByCategory)
+            taggame.TagId = value; //Seta o valor da Categoria no pedidoDto
+            var taggames = await Http.GetFromJsonAsync<List<TagGame>>("/TagGame/LTagGame");
+            TagGameList.Clear();
+            var gamesByCategory = taggames.Where(c => c.TagId == Convert.ToInt32(value));
+            foreach (var item in gamesByCategory)
             {
-                TagProdutoList.Add(item);
+                TagGameList.Add(item);
             }
 
         }

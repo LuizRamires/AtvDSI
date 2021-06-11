@@ -1,9 +1,9 @@
-﻿@page  "/TS/Produto/AddDetalhe/{Produto}"
+﻿@page  "/TS/Game/AddDetalhe/{Game}"
 @using System.Net.Http
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<h3>DetalheProduto</h3>
+<h3>DetalheGame</h3>
 <div class="card m-3">
     <h4 class="card-header"></h4>
     <div class="card-body">
@@ -34,8 +34,8 @@
             @*
             <div class="form-row">
                 <div class="form-group col">
-                    <label>Id do Produto</label>
-                    <InputNumber @bind-Value="detalheP.IdProduto" class="form-control">@produto.DetalheProduto.IdProduto</InputNumber>
+                    <label>Id do Game</label>
+                    <InputNumber @bind-Value="detalheP.IdGame" class="form-control">@game.DetalheGame.IdGame</InputNumber>
                     
                 </div>
             </div>
@@ -50,22 +50,22 @@
 </div>
 
 @code {
-    private DetalheProduto detalheP = new DetalheProduto();
-    private Produto produto = new Produto();
+    private DetalheGame detalheP = new DetalheGame();
+    private Game game = new Game();
 
     [Parameter]
-    public string Produto { get; set; }
+    public string Game { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var produtoId = Produto;
-        produto = await Http.GetFromJsonAsync<Produto>($"/Produto/PegaId?id={produtoId}"); //recebe um produto pelo Id enviado do controller que busca no db
-        detalheP.IdProduto=Convert.ToInt32(produtoId);    
+        var gameId = Game;
+        game = await Http.GetFromJsonAsync<Game>($"/Game/PegaId?id={gameId}"); //recebe um game pelo Id enviado do controller que busca no db
+        detalheP.IdGame=Convert.ToInt32(gameId);    
     }
 
     private async Task VDP()
     {
-        var d1 = await Http.PostAsJsonAsync("/DetalheProduto/CDetalhe", detalheP); //manda para o controller criar uma DetalheProduto por um  Json Async
+        var d1 = await Http.PostAsJsonAsync("/DetalheGame/CDetalhe", detalheP); //manda para o controller criar uma DetalheGame por um  Json Async
     }
 
 

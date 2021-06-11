@@ -12,36 +12,36 @@ namespace ProjetoTS.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProdutoController : Controller
+    public class GameController : Controller
     {
         private readonly ApplicationDBContext db;
 
-        public ProdutoController(ApplicationDBContext db)//injeção de dependencia
+        public GameController(ApplicationDBContext db)//injeção de dependencia
         {
             this.db = db;
         }
 
         [HttpPost]
         [Route("Criar")]
-        public async Task<ActionResult> Post([FromBody] ProdutoDTO produto)//recebe um produto do body do Http e não do header
+        public async Task<ActionResult> Post([FromBody] GameDTO game)//recebe um game do body do Http e não do header
         {
             
             try
             {
 
-                var newProduto = new Produto
+                var newGame = new Game
                 {
 
-                    Id = produto.Id,
-                    Nome = produto.Nome,
-                    Preco = produto.Preco,
-                    TagProduto = produto.TagProduto,
-                    DetalheProduto=produto.DetalheProduto,
-                    Vendedor=produto.Vendedor,
-                    IdVendedor = Convert.ToInt32(produto.IdVendedor)
+                    Id = game.Id,
+                    Nome = game.Nome,
+                    Preco = game.Preco,
+                    TagGame = game.TagGame,
+                    DetalheGame=game.DetalheGame,
+                    Desenvolvedora=game.Desenvolvedora,
+                    IdDesenvolvedora = Convert.ToInt32(game.IdDesenvolvedora)
                   
                 };
-                db.Add(newProduto);
+                db.Add(newGame);
                 await db.SaveChangesAsync();//insere na tabela
                 return Ok();
 
@@ -56,27 +56,27 @@ namespace ProjetoTS.Server.Controllers
         [Route("Listar")]
         public async Task<IActionResult> Get() //o tipo de retorno dessa ação
         {
-            var produtos = await db.Produtos.ToListAsync();//resulta em uma Lista de Produtos
-            return Ok(produtos);
+            var games = await db.Games.ToListAsync();//resulta em uma Lista de Games
+            return Ok(games);
         }
 
         [HttpGet]
-        [Route("PegaId")] //pega um produto pelo id
-        public async Task<Produto> Get([FromQuery] string id)
+        [Route("PegaId")] //pega um game pelo id
+        public async Task<Game> Get([FromQuery] string id)
         {
-            var produto = await db.Produtos.SingleOrDefaultAsync(x => x.Id == Convert.ToInt32(id));
-            return produto;
+            var game = await db.Games.SingleOrDefaultAsync(x => x.Id == Convert.ToInt32(id));
+            return game;
         }
 
         [HttpPut]
         [Route("Atualizar")]
-        public async Task<IActionResult> Put([FromBody] Produto produto) 
+        public async Task<IActionResult> Put([FromBody] Game game) 
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            db.Entry(produto).State = EntityState.Modified;
+            db.Entry(game).State = EntityState.Modified;
             try
             {
                 await db.SaveChangesAsync();
@@ -90,20 +90,20 @@ namespace ProjetoTS.Server.Controllers
 
         [HttpDelete]
         [Route("Deletar/{id}")]
-        public async Task<ActionResult<Produto>> Delete(int id)
+        public async Task<ActionResult<Game>> Delete(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var produto = await db.Produtos.FindAsync(id);
-            if (produto == null)
+            var game = await db.Games.FindAsync(id);
+            if (game == null)
             {
                 return NotFound();
             }
-            db.Produtos.Remove(produto);
+            db.Games.Remove(game);
             await db.SaveChangesAsync();
-            return Ok(produto);
+            return Ok(game);
         }
     }
 }

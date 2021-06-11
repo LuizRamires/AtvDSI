@@ -1,0 +1,28 @@
+﻿@page "/TS/Desenvolvedora/ListarDesenvolvedora"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Listar Desenvolvedoraes</h3>
+@foreach (var vend in DesenvolvedoraList)
+{
+    <tr>
+        <td>@vend.Nome</td>
+    </tr>
+}
+<a href="/TS/Desenvolvedora/ListarGameDesenvolvedoraes"><button class="btn btn-success">Lista De Game por Desenvolvedora</button></a>
+
+@code {
+    private List<Desenvolvedora> DesenvolvedoraList = new List<Desenvolvedora>();//Criar lista de Desenvolvedoraes
+
+    protected override async Task OnInitializedAsync()
+    {
+        var vend1 = await Http.GetFromJsonAsync<List<Desenvolvedora>>("/Desenvolvedora/ListDesenvolvedoraes");//Rota para o controller ir e trazer uma lista das desenvolvedoraes
+        foreach (var item in vend1)
+        {
+            DesenvolvedoraList.Add(item);//adiciona cada item na TagList
+
+        }
+    }
+
+}

@@ -12,29 +12,29 @@ namespace ProjetoTS.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class VendedorController : Controller
+    public class DesenvolvedoraController : Controller
     {
         private readonly ApplicationDBContext db;
 
-        public VendedorController(ApplicationDBContext db)//injeção de dependencia
+        public DesenvolvedoraController(ApplicationDBContext db)//injeção de dependencia
         {
             this.db = db;
         }
 
         [HttpPost]
-        [Route("CVendedor")]
-        public async Task<ActionResult> Post([FromBody] VendedorDTO vendedor)//recebe um produto do body do Http e não do header
+        [Route("CDesenvolvedora")]
+        public async Task<ActionResult> Post([FromBody] DesenvolvedoraDTO desenvolvedora)//recebe um game do body do Http e não do header
         {
             try
             {
-                var newVendedor = new Vendedor
+                var newDesenvolvedora = new Desenvolvedora
                 {
-                    IdVendedor=Convert.ToInt32(vendedor.IdVendedor),
-                    Nome=vendedor.Nome,
-                    Endereco=vendedor.Endereco,
-                    Produto=vendedor.Produto
+                    IdDesenvolvedora=Convert.ToInt32(desenvolvedora.IdDesenvolvedora),
+                    Nome=desenvolvedora.Nome,
+                    Endereco=desenvolvedora.Endereco,
+                    Game=desenvolvedora.Game
                 };
-                db.Add(newVendedor);
+                db.Add(newDesenvolvedora);
                 await db.SaveChangesAsync();//insere na tabela
                 return Ok();
 
@@ -47,11 +47,11 @@ namespace ProjetoTS.Server.Controllers
 
        
         [HttpGet]
-        [Route("ListVendedores")]
+        [Route("ListDesenvolvedoraes")]
         public async Task<IActionResult> Get() //o tipo de retorno dessa ação
         {
-            var vendedores = await db.Vendedores.ToListAsync();//resulta em uma Lista de Produtos
-            return Ok(vendedores);
+            var desenvolvedores = await db.Desenvolvedoraes.ToListAsync();//resulta em uma Lista de Games
+            return Ok(desenvolvedores);
         }
         
     }

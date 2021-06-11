@@ -1,0 +1,97 @@
+﻿@page "/TS/Game/ListarGame"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Listar Games</h3>
+
+
+<div class="card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Desenvolvedora</th>
+                <th scope="col">Tag</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in GameList) //roda a lista de games
+            {
+            <tr>
+                <td>@game.Nome</td>
+                <td>@String.Format("{0, 0:C2}", game.Preco)</td>
+                
+                
+                @foreach (var item in TagGameList) //roda a lista de tags
+                {
+                    if (item.Id == game.Id) { //só mostrará as tags que estiverem ligadas com o game acima
+                        <td>@TagList[(@item.TagId)-1].Nome</td>
+                    }
+                   
+
+                }
+            <td>
+                <a href="/TS/Game/VerDetalhe/@game.Id.ToString()"><button class="btn btn-success">Detalhe+</button></a>
+                <a href="/TS/Game/EditarGame/@game.Id.ToString()"><button class="btn btn-success">Editar</button></a>
+                <button class="btn btn-danger" @onclick="@(() => Deletar(game.Id))">Delete</button>
+            </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    private List<Game> GameList = new List<Game>();
+    private List<TagGame> TagGameList = new List<TagGame>();
+    private List<Tag> TagList = new List<Tag>();
+
+    //private Game game = new Game();
+    private Tag tag = new Tag();
+
+
+    int idC;
+    protected override async Task OnInitializedAsync()
+    {
+        var games = await Http.GetFromJsonAsync<List<Game>>("/Game/Listar");
+        foreach (var item in games)
+        {
+            GameList.Add(item);
+
+        }
+
+        var tgp = await Http.GetFromJsonAsync<List<TagGame>>("/TagGame/LTagGame");//Rota para o controller ir e trazer uma lista das Tags
+        foreach (var item in tgp)
+        {
+            TagGameList.Add(item);
+        }
+
+        var tags = await Http.GetFromJsonAsync<List<Tag>>("/Tag/ListarTAG");//Rota para o controller ir e trazer uma lista das Tags
+        foreach (var item in tags)
+        {
+            TagList.Add(item);//adiciona cada item na TagList
+
+        }
+    }
+    private async Task<string> PegaridP()
+    {
+      
+        var game = await Http.GetFromJsonAsync<Game>($"/TagGame/IdP"+idC);
+        return game.Nome;
+    }
+
+
+    private async Task Deletar(int gameId)
+    {
+        //call controller
+        await Http.DeleteAsync("/Game/Deletar/" + gameId);
+        NavigationManager.NavigateTo("TS/Game/ListarGame", true);
+    }
+
+}

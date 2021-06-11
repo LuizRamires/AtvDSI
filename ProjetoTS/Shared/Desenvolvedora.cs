@@ -6,12 +6,12 @@ using System.Text;
 
 namespace ProjetoTS.Shared
 {
-    public class VendedorDTO
+    public class Desenvolvedora
     {
-        public string IdVendedor { get; set; }
+        public int IdDesenvolvedora { get; set; }
         public string Nome { get; set; }
         public string Endereco { get; set; }
-        public List<Produto> Produto { get; set; }
+        public List<Game> Game { get; set; }
 
     }
 }

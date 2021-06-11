@@ -1,34 +1,34 @@
-﻿@page  "/TS/Produto/EditarProduto"
-@page "/TS/Produto/EditarProduto/{Produto}"
+﻿@page  "/TS/Game/EditarGame"
+@page "/TS/Game/EditarGame/{Game}"
 @using System.Net.Http
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<h3>EditarProduto</h3>
+<h3>EditarGame</h3>
 
 <div class="card m-3">
-    <h4 class="card-header">Cadastro do Produto</h4>
+    <h4 class="card-header">Cadastro do Game</h4>
     <div class="card-body">
-        <EditForm Model="@produto" OnValidSubmit="Validacao" @onreset="Reset">
+        <EditForm Model="@game" OnValidSubmit="Validacao" @onreset="Reset">
             <DataAnnotationsValidator />
             <div class="form-row">
                 <div class="form-group col">
                     <label>Id</label>
-                    <InputNumber @bind-Value="produto.Id" class="form-control" />
+                    <InputNumber @bind-Value="game.Id" class="form-control" />
                     
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                     <label>Nome</label>
-                    <InputText @bind-Value="produto.Nome" class="form-control" />
+                    <InputText @bind-Value="game.Nome" class="form-control" />
                     
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                     <label>Preço</label>
-                    <InputNumber @bind-Value="produto.Preco" @bind-Value:format="F2" class="form-control" />
+                    <InputNumber @bind-Value="game.Preco" @bind-Value:format="F2" class="form-control" />
                    
                 </div>
             </div>
@@ -41,28 +41,28 @@
 </div>
 
 @code {
-    private Produto produto = new Produto();
+    private Game game = new Game();
 
     [Parameter]
-    public string Produto { get; set; }
+    public string Game { get; set; }
     private EditContext editContext { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var produtoId = Produto;
-        produto = await Http.GetFromJsonAsync<Produto>($"/Produto/PegaId?id={produtoId}"); //recebe um produto pelo Id enviado do controller que busca no db
+        var gameId = Game;
+        game = await Http.GetFromJsonAsync<Game>($"/Game/PegaId?id={gameId}"); //recebe um game pelo Id enviado do controller que busca no db
     }
 
     private async Task Validacao()
     {
-        await Http.PutAsJsonAsync("/Produto/Atualizar", produto); //manda para o controller criar um produto por um  Json Async
-        NavigationManager.NavigateTo("TS/Produto/ListarProduto"); // Navega até o endereco forçando o navegador a dar reload
+        await Http.PutAsJsonAsync("/Game/Atualizar", game); //manda para o controller criar um game por um  Json Async
+        NavigationManager.NavigateTo("TS/Game/ListarGame"); // Navega até o endereco forçando o navegador a dar reload
     }
 
     private void Reset()
     {
-        produto = new Produto();
-        editContext = new EditContext(produto); //assim a validação nao é atualizada
+        game = new Game();
+        editContext = new EditContext(game); //assim a validação nao é atualizada
     }
 
 }

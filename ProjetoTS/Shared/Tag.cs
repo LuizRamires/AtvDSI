@@ -8,7 +8,7 @@ namespace ProjetoTS.Shared
     {
         public int TagId { get; set; }
         public string Nome { get; set; }
-        public List<TagProduto>  TagProduto  { get; set; }
+        public List<TagGame>  TagGame  { get; set; }
 
     }
 }

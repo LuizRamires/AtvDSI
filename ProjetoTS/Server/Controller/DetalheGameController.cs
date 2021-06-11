@@ -12,33 +12,33 @@ namespace ProjetoTS.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DetalheProdutoController : Controller
+    public class DetalheGameController : Controller
     {
         private readonly ApplicationDBContext db;
 
-        public DetalheProdutoController(ApplicationDBContext db)//injeção de dependencia
+        public DetalheGameController(ApplicationDBContext db)//injeção de dependencia
         {
             this.db = db;
         }
 
         [HttpPost]
         [Route("CDetalhe")]
-        public async Task<ActionResult> Post([FromBody] DetalheProduto detalheProduto)//recebe um produto do body do Http e não do header
+        public async Task<ActionResult> Post([FromBody] DetalheGame detalheGame)//recebe um produto do body do Http e não do header
         {
 
             try
             {
 
-                var newDProduto = new DetalheProduto
+                var newDGame = new DetalheGame
                 {
-                    IdProduto=detalheProduto.IdProduto,
-                    Descricao = detalheProduto.Descricao,
-                    TempoDeUso = detalheProduto.TempoDeUso,
-                    EstadodeConservacao = detalheProduto.EstadodeConservacao
+                    IdGame=detalheGame.IdGame,
+                    Descricao = detalheGame.Descricao,
+                    TempoDeUso = detalheGame.TempoDeUso,
+                    EstadodeConservacao = detalheGame.EstadodeConservacao
 
 
                 };
-                db.Add(newDProduto);
+                db.Add(newDGame);
                 await db.SaveChangesAsync();//insere na tabela
                 return Ok();
 
@@ -51,10 +51,10 @@ namespace ProjetoTS.Server.Controllers
 
         [HttpGet]
         [Route("Detalhes")] //pega o detalhe do produto
-        public async Task<DetalheProduto> Get([FromQuery] string id)
+        public async Task<DetalheGame> Get([FromQuery] string id)
         {
 
-            var deta = await db.DetalheProdutos.SingleOrDefaultAsync(x => x.IdProduto == Convert.ToInt32(id));
+            var deta = await db.DetalheGames.SingleOrDefaultAsync(x => x.IdGame == Convert.ToInt32(id));
             return deta;
         }
     }

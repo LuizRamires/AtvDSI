@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ProjetoTS.Shared //CADA PRODUTO PODERA ESTAR LIGADO À VARIAS TAGS
 {
-    public class Produto
+    public class GameDTO
     {
         [Required]
         public int Id { get; set; }
@@ -16,9 +16,9 @@ namespace ProjetoTS.Shared //CADA PRODUTO PODERA ESTAR LIGADO À VARIAS TAGS
         [Required]
         [Column(TypeName = "decimal(5,2)")]
         public decimal Preco { get; set; }
-        public List<TagProduto> TagProduto { get; set; }//lista de tags que o produto vai ter
-        public DetalheProduto DetalheProduto { get; set; }//Relacao 1 para 1
-        public int IdVendedor { get; set; }
-        public Vendedor Vendedor { get; set; }
+        public List<TagGame> TagGame { get; set; }//lista de tags que o produto vai ter
+        public DetalheGame DetalheGame { get; set; }//Relacao 1 para 1
+        public string IdDesenvolvedora { get; set; }
+        public Desenvolvedora Desenvolvedora { get; set; }
     }
 }

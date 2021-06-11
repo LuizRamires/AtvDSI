@@ -1,53 +1,53 @@
-﻿@page "/TS/Produto/CadastrarProduto"
+﻿@page "/TS/Game/CadastrarGame"
 @using System.Net.Http
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
 
-<h3>CadastroProduto</h3>
+<h3>CadastroGame</h3>
 <div class="card m-3">
-    <h4 class="card-header">Cadastro do Produto</h4>
+    <h4 class="card-header">Cadastro do Game</h4>
     <div class="card-body">
-        <EditForm Model="@produto" OnValidSubmit="ValidC" @onreset="Reset">
+        <EditForm Model="@game" OnValidSubmit="ValidC" @onreset="Reset">
             <DataAnnotationsValidator />
             <div class="form-row">
                 <div class="form-group col">
                     <label>Id</label>
-                    <InputNumber @bind-Value="produto.Id" class="form-control" />
-                    <ValidationMessage For="@(() => produto.Id)" />
+                    <InputNumber @bind-Value="game.Id" class="form-control" />
+                    <ValidationMessage For="@(() => game.Id)" />
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                     <label>Nome</label>
-                    <InputText @bind-Value="produto.Nome" class="form-control" />
-                    <ValidationMessage For="@(() => produto.Nome)" />
+                    <InputText @bind-Value="game.Nome" class="form-control" />
+                    <ValidationMessage For="@(() => game.Nome)" />
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                     <label>Preço</label>
-                    <InputNumber @bind-Value="produto.Preco" @bind-Value:format="F2" class="form-control" />
-                    <ValidationMessage For="@(() => produto.Preco)" />
+                    <InputNumber @bind-Value="game.Preco" @bind-Value:format="F2" class="form-control" />
+                    <ValidationMessage For="@(() => game.Preco)" />
                 </div>
             </div>
             @*
             <div class="form-row">
                 <div class="form-group col">
-                    <label>id do Vendedor: </label>
-                    <InputText @bind-Value="produto.IdVendedor" class="form-control" />
+                    <label>id do Desenvolvedora: </label>
+                    <InputText @bind-Value="game.IdDesenvolvedora" class="form-control" />
 
                 </div>
             </div>
                 *@
             <div class="form-row">
-                <label>Vendedor</label>
-                <InputSelect @bind-Value="produto.IdVendedor">
+                <label>Desenvolvedora</label>
+                <InputSelect @bind-Value="game.IdDesenvolvedora">
                     <option value="">Selecione a Categoria</option>
-                    @foreach (var item in VendedorList)
+                    @foreach (var item in DesenvolvedoraList)
                     {
 
-                        <option value="@item.IdVendedor">@item.Nome</option>
+                        <option value="@item.IdDesenvolvedora">@item.Nome</option>
                     }
                 </InputSelect>
             </div>
@@ -59,7 +59,7 @@
         <div class="form-row">
             <div class="form-group col">
                 <label>Descrição</label>
-                <InputText @bind-Value="produto.DetalheProduto.Descricao" class="form-control" />
+                <InputText @bind-Value="game.DetalheGame.Descricao" class="form-control" />
 
             </div>
         </div>
@@ -67,14 +67,14 @@
         <div class="form-row">
             <div class="form-group col">
                 <label>Estado de Conservação</label>
-                <InputText @bind-Value="produto.DetalheProduto.EstadodeConservacao" class="form-control" />
+                <InputText @bind-Value="game.DetalheGame.EstadodeConservacao" class="form-control" />
 
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col">
                 <label>Tempo de Uso</label>
-                <InputText @bind-Value="produto.DetalheProduto.TempoDeUso" class="form-control" />
+                <InputText @bind-Value="game.DetalheGame.TempoDeUso" class="form-control" />
 
             </div>
         </div>
@@ -90,26 +90,26 @@
 
 
 @code {
-    private List<Vendedor> VendedorList = new List<Vendedor>();
-    private ProdutoDTO produto = new ProdutoDTO();
+    private List<Desenvolvedora> DesenvolvedoraList = new List<Desenvolvedora>();
+    private GameDTO game = new GameDTO();
     private EditContext editContext { get; set; }
     private List<Tag> TagList = new List<Tag>();
 
     protected override async Task OnInitializedAsync()
     {
-        var vend = await Http.GetFromJsonAsync<List<Vendedor>>("/Vendedor/ListVendedores");//Rota para o controller ir e trazer uma lista de Vendedores
+        var vend = await Http.GetFromJsonAsync<List<Desenvolvedora>>("/Desenvolvedora/ListDesenvolvedoraes");//Rota para o controller ir e trazer uma lista de Desenvolvedoraes
         foreach (var item in vend)
         {
-            VendedorList.Add(item);
+            DesenvolvedoraList.Add(item);
         }
     }
 
     private async Task ValidC()
     {
-        Console.WriteLine(produto.IdVendedor);
-        var p1 = await Http.PostAsJsonAsync("/Produto/Criar", produto); //manda para o controller criar um produto por um  Json Async
-        NavigationManager.NavigateTo("TS/Produto/AddDetalhe/" + produto.Id.ToString());
-        //NavigationManager.NavigateTo("TS/Produto/ListarProduto"); // Navega até o endereco forçando o navegador a dar reload
+        Console.WriteLine(game.IdDesenvolvedora);
+        var p1 = await Http.PostAsJsonAsync("/Game/Criar", game); //manda para o controller criar um game por um  Json Async
+        NavigationManager.NavigateTo("TS/Game/AddDetalhe/" + game.Id.ToString());
+        //NavigationManager.NavigateTo("TS/Game/ListarGame"); // Navega até o endereco forçando o navegador a dar reload
 
         var tags = await Http.GetFromJsonAsync<List<Tag>>("/Tag/ListarTAG");//Rota para o controller ir e trazer uma lista das Tags
         foreach (var item in tags)
@@ -121,8 +121,8 @@
 
     private void Reset()
     {
-        produto = new ProdutoDTO();
-        editContext = new EditContext(produto); //Sinaliza quais campos foram modificados
+        game = new GameDTO();
+        editContext = new EditContext(game); //Sinaliza quais campos foram modificados
     }
 
 }

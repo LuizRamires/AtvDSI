@@ -1,0 +1,43 @@
+﻿@page "/TS/Game/VerDetalhe"
+@page "/TS/Game/VerDetalhe/{Game}"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Detalhes:</h3>
+<div class="card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id do Game</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Estado de Conservação</th>
+                <th scope="col">Tempo de Uso</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>@dgame.IdGame</td>
+                <td>@dgame.Descricao</td>
+                <td>@dgame.EstadodeConservacao</td>
+                <td>@dgame.TempoDeUso</td>
+            </tr>
+            <a href="/TS/Game/ListarGame"><button class="btn btn-success">Voltar</button></a>
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private DetalheGame dgame = new DetalheGame();
+
+    [Parameter]
+    public string Game { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var gameId = Game;
+        dgame  = await Http.GetFromJsonAsync<DetalheGame>($"/DetalheGame/Detalhes?id={gameId}");
+    }
+}

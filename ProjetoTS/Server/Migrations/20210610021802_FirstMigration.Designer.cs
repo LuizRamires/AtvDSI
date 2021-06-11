@@ -9,8 +9,8 @@ using ProjetoTS.Server;
 namespace ProjetoTS.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20201029211804_ummuitos")]
-    partial class ummuitos
+    [Migration("20210610021802_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,9 +19,26 @@ namespace ProjetoTS.Server.Migrations
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ProjetoTS.Shared.DetalheProduto", b =>
+            modelBuilder.Entity("ProjetoTS.Shared.Desenvolvedora", b =>
                 {
-                    b.Property<int>("IdProduto")
+                    b.Property<int>("IdDesenvolvedora")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Endereco")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("IdDesenvolvedora");
+
+                    b.ToTable("Desenvolvedoraes");
+                });
+
+            modelBuilder.Entity("ProjetoTS.Shared.DetalheGame", b =>
+                {
+                    b.Property<int>("IdGame")
                         .HasColumnType("int");
 
                     b.Property<string>("Descricao")
@@ -33,18 +50,21 @@ namespace ProjetoTS.Server.Migrations
                     b.Property<string>("TempoDeUso")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.HasKey("IdProduto");
+                    b.HasKey("IdGame");
 
-                    b.ToTable("DetalheProdutos");
+                    b.ToTable("DetalheGames");
                 });
 
-            modelBuilder.Entity("ProjetoTS.Shared.Produto", b =>
+            modelBuilder.Entity("ProjetoTS.Shared.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("IdVendedor")
+                    b.Property<int?>("DesenvolvedoraIdDesenvolvedora")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdDesenvolvedora")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -54,14 +74,11 @@ namespace ProjetoTS.Server.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int?>("VendedorIdVendedor")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("VendedorIdVendedor");
+                    b.HasIndex("DesenvolvedoraIdDesenvolvedora");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("ProjetoTS.Shared.Tag", b =>
@@ -78,7 +95,7 @@ namespace ProjetoTS.Server.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("ProjetoTS.Shared.TagProduto", b =>
+            modelBuilder.Entity("ProjetoTS.Shared.TagGame", b =>
                 {
                     b.Property<int>("TagId")
                         .HasColumnType("int");
@@ -90,52 +107,35 @@ namespace ProjetoTS.Server.Migrations
 
                     b.HasIndex("Id");
 
-                    b.ToTable("TagProdutos");
+                    b.ToTable("TagGames");
                 });
 
-            modelBuilder.Entity("ProjetoTS.Shared.Vendedor", b =>
+            modelBuilder.Entity("ProjetoTS.Shared.DetalheGame", b =>
                 {
-                    b.Property<int>("IdVendedor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Endereco")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("IdVendedor");
-
-                    b.ToTable("Vendedores");
-                });
-
-            modelBuilder.Entity("ProjetoTS.Shared.DetalheProduto", b =>
-                {
-                    b.HasOne("ProjetoTS.Shared.Produto", "Produto")
-                        .WithOne("DetalheProduto")
-                        .HasForeignKey("ProjetoTS.Shared.DetalheProduto", "IdProduto")
+                    b.HasOne("ProjetoTS.Shared.Game", "Game")
+                        .WithOne("DetalheGame")
+                        .HasForeignKey("ProjetoTS.Shared.DetalheGame", "IdGame")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProjetoTS.Shared.Produto", b =>
+            modelBuilder.Entity("ProjetoTS.Shared.Game", b =>
                 {
-                    b.HasOne("ProjetoTS.Shared.Vendedor", "Vendedor")
-                        .WithMany("Produto")
-                        .HasForeignKey("VendedorIdVendedor");
+                    b.HasOne("ProjetoTS.Shared.Desenvolvedora", "Desenvolvedora")
+                        .WithMany("Game")
+                        .HasForeignKey("DesenvolvedoraIdDesenvolvedora");
                 });
 
-            modelBuilder.Entity("ProjetoTS.Shared.TagProduto", b =>
+            modelBuilder.Entity("ProjetoTS.Shared.TagGame", b =>
                 {
-                    b.HasOne("ProjetoTS.Shared.Produto", "produto")
-                        .WithMany("TagProduto")
+                    b.HasOne("ProjetoTS.Shared.Game", "game")
+                        .WithMany("TagGame")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProjetoTS.Shared.Tag", "tag")
-                        .WithMany("TagProduto")
+                        .WithMany("TagGame")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

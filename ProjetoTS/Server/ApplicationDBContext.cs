@@ -16,37 +16,37 @@ namespace ProjetoTS.Server
         {
 
         }
-        public DbSet<Vendedor> Vendedores { get; set; }
-        public DbSet<TagProduto> TagProdutos { get; set; }
-        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Desenvolvedora> Desenvolvedoraes { get; set; }
+        public DbSet<TagGame> TagGames { get; set; }
+        public DbSet<Game> Games { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<DetalheProduto> DetalheProdutos { get; set; }
+        public DbSet<DetalheGame> DetalheGames { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)//criando a chave composta com fluent API
         {
-            //modelBuilder.Entity<Vendedor>().HasNoKey();
+            //modelBuilder.Entity<Desenvolvedora>().HasNoKey();
               
-            modelBuilder.Entity<Vendedor>().HasKey(x => new { x.IdVendedor});
+            modelBuilder.Entity<Desenvolvedora>().HasKey(x => new { x.IdDesenvolvedora});
 
 
             //------------------------------------------ Um pra um
-            modelBuilder.Entity<DetalheProduto>().HasKey(x => new { x.IdProduto});
+            modelBuilder.Entity<DetalheGame>().HasKey(x => new { x.IdGame});
 
-            modelBuilder.Entity<Produto>()
-            .HasOne(a => a.DetalheProduto)
-            .WithOne(a => a.Produto)
-            .HasForeignKey<DetalheProduto>(c => c.IdProduto);//Fazendo a ligação de um pra um
+            modelBuilder.Entity<Game>()
+            .HasOne(a => a.DetalheGame)
+            .WithOne(a => a.Game)
+            .HasForeignKey<DetalheGame>(c => c.IdGame);//Fazendo a ligação de um pra um
 
             //------------------------------------------ Muitos Pra Muitos
-            modelBuilder.Entity<TagProduto>().HasKey(x => new { x.TagId, x.Id });//Ele recebe as "primary key" das tabelas Tag e produto 
+            modelBuilder.Entity<TagGame>().HasKey(x => new { x.TagId, x.Id });//Ele recebe as "primary key" das tabelas Tag e game 
 
 
-            modelBuilder.Entity<TagProduto>().HasOne(xy => xy.tag)//TagProduto tem 1 tag
-                .WithMany(x => x.TagProduto)//Com muitos TagProdutos
+            modelBuilder.Entity<TagGame>().HasOne(xy => xy.tag)//TagGame tem 1 tag
+                .WithMany(x => x.TagGame)//Com muitos TagGames
                 .HasForeignKey(xy => xy.TagId);//Com foreign key de tag
 
-            modelBuilder.Entity<TagProduto>().HasOne(xy => xy.produto)
-                .WithMany(y => y.TagProduto)
+            modelBuilder.Entity<TagGame>().HasOne(xy => xy.game)
+                .WithMany(y => y.TagGame)
                 .HasForeignKey(xy => xy.Id);
         }
     }

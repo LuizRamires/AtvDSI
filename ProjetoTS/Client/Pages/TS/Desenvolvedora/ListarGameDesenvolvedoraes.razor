@@ -1,0 +1,62 @@
+﻿@page "/TS/Desenvolvedora/ListarGameDesenvolvedoraes"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>ListarGameDesenvolvedoraes</h3>
+
+
+<div class="card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Game</th>
+            </tr>
+        </thead>
+
+        @foreach (var desenvolvedora in DesenvolvedoraList) //roda a lista de games
+        {
+            <tbody>
+                <tr>
+                    <td>@desenvolvedora.Nome</td>
+                    @foreach (var game in GameList) //roda a lista de tags
+                    {
+                        if (desenvolvedora.IdDesenvolvedora == game.IdDesenvolvedora)
+                        { //só mostrará as tags que estiverem ligadas com o game acima
+                            <td>@game.Nome</td>
+                        }
+
+
+                    }
+                </tr>
+            </tbody>
+        }
+
+    </table>
+</div>
+
+
+
+
+
+@code {
+    private List<Desenvolvedora> DesenvolvedoraList = new List<Desenvolvedora>();//Criar lista de Desenvolvedoraes
+    private List<Game> GameList = new List<Game>();
+    protected override async Task OnInitializedAsync()
+    {
+        var vend1 = await Http.GetFromJsonAsync<List<Desenvolvedora>>("/Desenvolvedora/ListDesenvolvedoraes");//Rota para o controller ir e trazer uma lista das desenvolvedoraes
+        foreach (var item in vend1)
+        {
+            DesenvolvedoraList.Add(item);//adiciona cada item na TagList
+
+        }
+
+        var games = await Http.GetFromJsonAsync<List<Game>>("/Game/Listar");
+        foreach (var item in games)
+        {
+            GameList.Add(item);
+
+        }
+    }
+}
